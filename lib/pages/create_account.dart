@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:tristagram/widgets/header.dart';
 
@@ -8,12 +10,14 @@ class CreateAccount extends StatefulWidget {
 
 class _CreateAccountState extends State<CreateAccount> {
   String username;
-  final GlobalKey<FormState> _formKey = GlobalKey();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext parentContext) {
     return Scaffold(
-      appBar: header(context, isAppTitle: false, title: 'Create account'),
+      key: _scaffoldKey,
+      appBar: header(context, isAppTitle: false, title: 'Create account', removeBackButton: true),
       body: ListView(
         children: <Widget>[
           Container(
@@ -33,6 +37,7 @@ class _CreateAccountState extends State<CreateAccount> {
                   child: Container(
                     child: Form(
                       key: _formKey,
+                      autovalidate: true,
                       child: TextFormField(
                         onSaved: (val) => username = val,
                         decoration: InputDecoration(
@@ -40,6 +45,14 @@ class _CreateAccountState extends State<CreateAccount> {
                             labelStyle: TextStyle(fontSize: 15.0),
                             labelText: "Username",
                             hintText: "Must be at least 3 characters"),
+                        validator: (val) {
+                          if (val.trim().isEmpty || val.trim().length < 3) {
+                            return 'username is too short';
+                          } else if (val.trim().length > 12) {
+                            return 'username is too long';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                   ),
@@ -70,7 +83,17 @@ class _CreateAccountState extends State<CreateAccount> {
   }
 
   void submit() {
-    _formKey.currentState.save();
-    Navigator.pop(context, username);
+    final form = _formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      SnackBar snackBar = SnackBar(
+        content: Text('Welcome ${username}!'),
+      );
+      _scaffoldKey.currentState.showSnackBar(snackBar);
+      Timer(Duration(seconds: 3), () {
+        Navigator.pop(context, username);
+      });
+      _formKey.currentState.save();
+    }
   }
 }

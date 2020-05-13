@@ -8,6 +8,8 @@ import 'package:tristagram/pages/profile.dart';
 import 'package:tristagram/pages/search.dart';
 import 'package:tristagram/pages/upload.dart';
 
+import '../models/user.dart';
+
 final GoogleSignIn googleSignIn = GoogleSignIn();
 final usersRef = Firestore.instance.collection('users');
 
@@ -20,6 +22,7 @@ class _HomeState extends State<Home> {
   bool isAuth = false;
   PageController pageController;
   int pageIndex = 0;
+  User currentUser;
 
   @override
   void initState() {
@@ -171,7 +174,7 @@ class _HomeState extends State<Home> {
   void createUserInFirestore() async {
     // check if user exists in users collection in db
     final GoogleSignInAccount user = googleSignIn.currentUser;
-    final DocumentSnapshot doc = await usersRef.document(user.id).get();
+    DocumentSnapshot doc = await usersRef.document(user.id).get();
     final timestamp = DateTime.now();
 
     if (!doc.exists) {
@@ -188,6 +191,10 @@ class _HomeState extends State<Home> {
         'bio': '',
         'timestamp': timestamp,
       });
+      doc = await usersRef.document(user.id).get();
     }
+    currentUser = User.fromDocument(doc);
+    print(currentUser);
+    print(currentUser.username);
   }
 }
