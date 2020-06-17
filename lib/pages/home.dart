@@ -144,8 +144,8 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void login() {
-    googleSignIn.signIn();
+  void login() async {
+    await googleSignIn.signIn();
   }
 
   void logout() {
@@ -167,7 +167,7 @@ class _HomeState extends State<Home> {
   void onTap(int nextPage) {
     pageController.animateToPage(
       nextPage,
-      duration: const Duration(microseconds: 250),
+      duration: const Duration(milliseconds: 200),
       curve: Curves.easeInOut,
     );
   }

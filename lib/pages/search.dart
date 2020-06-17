@@ -30,15 +30,21 @@ class _SearchState extends State<Search> {
       title: TextFormField(
         controller: textEditingController,
         decoration: InputDecoration(
+          fillColor: Colors.white,
           hintText: 'Search for a user...',
           filled: true,
-          prefix: Icon(
-            Icons.account_box,
-            size: 28.0,
+          prefix: Container(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(
+              Icons.account_box,
+              color: Colors.grey,
+              size: 28.0,
+            ),
           ),
           suffix: IconButton(
             icon: Icon(
               Icons.clear,
+              color: Colors.grey,
             ),
             onPressed: () => textEditingController.clear(),
           ),
