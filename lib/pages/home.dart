@@ -9,6 +9,8 @@ import 'package:tristagram/pages/profile.dart';
 import 'package:tristagram/pages/search.dart';
 import 'package:tristagram/pages/upload.dart';
 
+import '../models/user.dart';
+
 final GoogleSignIn googleSignIn = GoogleSignIn();
 final usersRef = Firestore.instance.collection('users');
 
@@ -192,7 +194,8 @@ class _HomeState extends State<Home> {
       });
       doc = await usersRef.document(user.id).get();
     }
-      currentUser = User.fromDocument(doc);
-    debugPrint('Current user : ${currentUser.username}');
+    currentUser = User.fromDocument(doc);
+    print(currentUser);
+    print(currentUser.username);
   }
 }

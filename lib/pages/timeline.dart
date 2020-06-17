@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:tristagram/widgets/header.dart';
 import 'package:tristagram/widgets/progress.dart';
 
-final Firestore firestore = Firestore.instance;
-final usersRef = Firestore.instance.collection('users');
+import 'home.dart';
+
 
 class Timeline extends StatefulWidget {
   @override
