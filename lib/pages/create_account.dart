@@ -9,6 +9,8 @@ class CreateAccount extends StatefulWidget {
 class _CreateAccountState extends State<CreateAccount> {
   String username;
   final GlobalKey<FormState> _formKey = GlobalKey();
+  bool _autoValidate = false;
+  bool canContinue = false;
 
   @override
   Widget build(BuildContext parentContext) {
@@ -40,6 +42,15 @@ class _CreateAccountState extends State<CreateAccount> {
                             labelStyle: TextStyle(fontSize: 15.0),
                             labelText: "Username",
                             hintText: "Must be at least 3 characters"),
+                        autovalidate: _autoValidate,
+                        validator: (val) {
+                          if (val.length < 3) {
+                            canContinue = false;
+                            return "Username must be 3 characters long";
+                          }
+                          canContinue = true;
+                          return null;
+                        },
                       ),
                     ),
                   ),
@@ -70,7 +81,12 @@ class _CreateAccountState extends State<CreateAccount> {
   }
 
   void submit() {
-    _formKey.currentState.save();
-    Navigator.pop(context, username);
+    setState(() {
+      _autoValidate = true;
+    });
+    if (canContinue) {
+      _formKey.currentState.save();
+      Navigator.pop(context, username);
+    }
   }
 }

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:tristagram/models/user.dart';
 import 'package:tristagram/pages/activity_feed.dart';
 import 'package:tristagram/pages/create_account.dart';
 import 'package:tristagram/pages/profile.dart';
@@ -20,6 +21,7 @@ class _HomeState extends State<Home> {
   bool isAuth = false;
   PageController pageController;
   int pageIndex = 0;
+  User currentUser;
 
   @override
   void initState() {
@@ -106,7 +108,7 @@ class _HomeState extends State<Home> {
               Theme.of(context).primaryColor,
             ],
             begin: Alignment.topLeft,
-            end: Alignment.bottomLeft,
+            end: Alignment.bottomRight,
           ),
         ),
         alignment: Alignment.center,
@@ -171,7 +173,7 @@ class _HomeState extends State<Home> {
   void createUserInFirestore() async {
     // check if user exists in users collection in db
     final GoogleSignInAccount user = googleSignIn.currentUser;
-    final DocumentSnapshot doc = await usersRef.document(user.id).get();
+    DocumentSnapshot doc = await usersRef.document(user.id).get();
     final timestamp = DateTime.now();
 
     if (!doc.exists) {
@@ -188,6 +190,9 @@ class _HomeState extends State<Home> {
         'bio': '',
         'timestamp': timestamp,
       });
+      doc = await usersRef.document(user.id).get();
     }
+      currentUser = User.fromDocument(doc);
+    debugPrint('Current user : ${currentUser.username}');
   }
 }
